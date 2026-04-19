@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G検定 第1章 模擬問題 — 人工知能</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    header {
+      text-align: center;
+      padding: 24px 16px 16px;
+      max-width: 720px;
+      margin: 0 auto 24px;
+    }
+
+    header h1 {
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .progress-wrap {
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-bar-inner {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 24px;
+      max-width: 720px;
+      margin: 0 auto;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+
+    .question-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: clamp(1rem, 2.8vw, 1.15rem);
+      font-weight: 600;
+      line-height: 1.65;
+      margin-bottom: 22px;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .choice-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--text);
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    .choice-btn .label {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .choice-btn.correct {
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .choice-btn.correct .label {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .choice-btn.wrong {
+      border-color: var(--danger);
+      background: #fef2f2;
+    }
+
+    .choice-btn.wrong .label {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .choice-btn:disabled {
+      cursor: default;
+    }
+
+    .feedback {
+      display: none;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .feedback.show { display: block; }
+
+    .feedback.correct-fb {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #14532d;
+    }
+
+    .feedback.wrong-fb {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #7f1d1d;
+    }
+
+    .feedback strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .btn-next {
+      display: none;
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn-next.show { display: block; }
+
+    .btn-next:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+    /* Score screen */
+    #score-screen {
+      display: none;
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    #score-screen.show { display: block; }
+
+    .score-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 40px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+
+    .score-circle {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: conic-gradient(var(--primary) var(--pct, 0%), var(--border) 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+
+    .score-circle::before {
+      content: '';
+      width: 108px;
+      height: 108px;
+      background: var(--card);
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .score-number {
+      position: relative;
+      z-index: 1;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .score-card h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .score-card p {
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .rank {
+      display: inline-block;
+      margin: 16px 0;
+      padding: 6px 20px;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .rank-s { background: #fef9c3; color: #854d0e; }
+    .rank-a { background: #dbeafe; color: #1e3a8a; }
+    .rank-b { background: #f0fdf4; color: #14532d; }
+    .rank-c { background: #fef2f2; color: #7f1d1d; }
+
+    .btn-retry {
+      margin-top: 24px;
+      padding: 14px 40px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-retry:hover { background: var(--primary-dark); }
+
+    .results-list {
+      margin-top: 28px;
+      text-align: left;
+    }
+
+    .results-list h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    .result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+
+    .result-item:last-child { border-bottom: none; }
+
+    .result-icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .icon-o { background: var(--success); }
+    .icon-x { background: var(--danger); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>G検定 第1章 模擬問題</h1>
+  <p>人工知能の基礎・歴史 — 4択 15問</p>
+</header>
+
+<div class="progress-wrap" id="progress-wrap">
+  <div class="progress-label">
+    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-score">正解: 0</span>
+  </div>
+  <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
+</div>
+
+<div class="card" id="quiz-card">
+  <div class="question-num" id="q-num">問題 1</div>
+  <div class="question-text" id="q-text"></div>
+  <div class="choices" id="choices"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="btn-next" id="btn-next">次の問題へ →</button>
+</div>
+
+<div id="score-screen">
+  <div class="score-card">
+    <div class="score-circle" id="score-circle">
+      <div class="score-number" id="score-num">0/15</div>
+    </div>
+    <h2 id="score-title"></h2>
+    <p id="score-sub"></p>
+    <div class="rank" id="score-rank"></div>
+    <br>
+    <p style="color:var(--muted);font-size:0.85rem;">G検定の目安: 正答率70%以上で合格ライン</p>
+    <button class="btn-retry" onclick="restart()">もう一度挑戦する</button>
+    <div class="results-list">
+      <h3>問題別 結果一覧</h3>
+      <div id="results-detail"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "「人工知能（Artificial Intelligence）」という言葉を初めて使用した人物は誰か？",
+    choices: ["アラン・チューリング", "ジョン・マッカーシー", "ハーバート・サイモン", "アレン・ニューウェル"],
+    answer: 1,
+    explanation: "1956年のダートマス会議でジョン・マッカーシー（John McCarthy）が「人工知能」という言葉を初めて使いました。チューリングはチューリングテストで有名ですが、AIの命名者はマッカーシーです。"
+  },
+  {
+    q: "人工知能という言葉が初めて使われたダートマス会議が開催された年はどれか？",
+    choices: ["1946年", "1950年", "1956年", "1969年"],
+    answer: 2,
+    explanation: "ダートマス会議は1956年にアメリカのダートマス大学で開催されました。1946年はENIAC（世界初の汎用コンピュータ）が誕生した年です。"
+  },
+  {
+    q: "世界初の汎用コンピュータ「ENIAC」が開発された大学はどこか？",
+    choices: ["ハーバード大学", "MIT（マサチューセッツ工科大学）", "スタンフォード大学", "ペンシルベニア大学"],
+    answer: 3,
+    explanation: "ENIAC（Electronic Numerical Integrator And Computer）は1946年にペンシルベニア大学で開発されました。真空管を使った巨大な計算機で、世界初の汎用コンピュータです。"
+  },
+  {
+    q: "人工知能のレベル分けにおいて、「特徴量を自動的に学習する」という特徴を持つのは何レベルか？",
+    choices: ["レベル1", "レベル2", "レベル3", "レベル4"],
+    answer: 3,
+    explanation: "レベル4はディープラーニング（深層学習）を取り入れたAIであり、特徴量を自動的に学習する点が最大の特徴です。レベル3の機械学習では人間が特徴量を設計する必要がありました。"
+  },
+  {
+    q: "ダートマス会議で世界初のAIプログラム「ロジック・セオリスト」をデモンストレーションした人物の組み合わせとして正しいものはどれか？",
+    choices: [
+      "ジョン・マッカーシーとクロード・シャノン",
+      "アレン・ニューウェルとハーバート・サイモン",
+      "マービン・ミンスキーとジョン・マッカーシー",
+      "ハーバート・サイモンとクロード・シャノン"
+    ],
+    answer: 1,
+    explanation: "ロジック・セオリスト（Logic Theorist）はアレン・ニューウェルとハーバート・サイモンが開発しました。数学の定理を自動証明できることを示した、世界初のAIプログラムです。"
+  },
+  {
+    q: "「AI効果（AI Effect）」の説明として最も適切なものはどれか？",
+    choices: [
+      "AIが急速に発展し人間の知能を超える現象",
+      "AIの導入により生産性が向上する効果",
+      "AIが新しい能力を実現しその原理が解明されると「知能ではない」と結論付ける心理",
+      "AIの学習に必要なデータ量が増加し続ける現象"
+    ],
+    answer: 2,
+    explanation: "AI効果とは、AIが何か知的に見えることを実現し、その仕組みが解明されると「それは単なる計算・自動化で知能ではない」と結論付けてしまう人間の心理的バイアスです。"
+  },
+  {
+    q: "第一次AIブームの主要な研究テーマとして最も適切なものはどれか？",
+    choices: ["ビッグデータ解析", "探索・推論", "ニューラルネットワーク", "エキスパートシステム"],
+    answer: 1,
+    explanation: "第一次AIブーム（1950年代後半〜1960年代）のテーマは探索と推論です。迷路や数学証明のようなトイ・プロブレムを解くことに成功しましたが、現実の複雑な問題には対応できずブームが冷めました。"
+  },
+  {
+    q: "第一次AIブームで解けたとされる「トイ・プロブレム（Toy Problem）」の例として適切でないものはどれか？",
+    choices: ["迷路を解く問題", "数学定理の自動証明", "医療画像からの癌診断", "チェスのゲーム"],
+    answer: 2,
+    explanation: "医療画像からの癌診断は現実世界の複雑な問題であり、トイ・プロブレムには含まれません。トイ・プロブレムとは迷路・数学証明・チェスのような人工的に単純化された問題です。第三次AIブームのディープラーニングで初めて実用レベルになりました。"
+  },
+  {
+    q: "第二次AIブーム（1980年代）において中心的な役割を果たした技術はどれか？",
+    choices: ["ディープラーニング", "エキスパートシステム", "強化学習", "変換器（Transformer）"],
+    answer: 1,
+    explanation: "第二次AIブームでは専門家の知識をデータベースに格納した「エキスパートシステム」が多数開発されました。しかし知識の蓄積・管理コストが膨大になるという限界が明らかになりブームが終わりました。"
+  },
+  {
+    q: "第二次AIブームの時期に日本が推進した国家的な大型プロジェクトの名称はどれか？",
+    choices: ["第四世代コンピュータ計画", "第五世代コンピュータプロジェクト", "AI国家戦略2020", "スーパーコンピュータ京プロジェクト"],
+    answer: 1,
+    explanation: "1980年代の第二次AIブーム時、日本は通産省主導で「第五世代コンピュータ」プロジェクトを推進しました。知識処理を高速化する専用コンピュータの開発を目指しましたが、AIの冬の時代とともに成果を十分に活かせませんでした。"
+  },
+  {
+    q: "第三次AIブームの主要キーワードとして最も適切な組み合わせはどれか？",
+    choices: [
+      "探索・推論・トイ・プロブレム",
+      "エキスパートシステム・第五世代コンピュータ",
+      "機械学習・ビッグデータ・ディープラーニング",
+      "ロジック・セオリスト・ダートマス会議"
+    ],
+    answer: 2,
+    explanation: "第三次AIブーム（2010年代〜）はビッグデータを活用した機械学習と、特徴量を自動学習するディープラーニング（深層学習）が中心です。2012年のImageNetでのディープラーニングの圧倒的な成果がブームの火付け役となりました。"
+  },
+  {
+    q: "人工知能のレベル分けにおいて、「探索・推論・知識データベースを活用し、状況に応じた複雑な振る舞いをする」と定義されるのはどのレベルか？",
+    choices: ["レベル1", "レベル2", "レベル3", "レベル4"],
+    answer: 1,
+    explanation: "レベル2は「古典的な人工知能」です。探索・推論・知識データを活用し状況に応じた振る舞いができますが、機械学習は含みません。エキスパートシステムなどが該当します。"
+  },
+  {
+    q: "AIが人間の知能を超える時点を指す概念として正しいものはどれか？",
+    choices: ["AI効果", "シンギュラリティー（技術的特異点）", "ムーアの法則", "チューリングテスト"],
+    answer: 1,
+    explanation: "シンギュラリティー（技術的特異点）とは、AIが人間の知能を超え、それ以降の技術進歩が人間には予測不可能になる時点のことです。レイ・カーツワイルは2045年に到達すると予測しました。"
+  },
+  {
+    q: "現在（第三次AIブーム以降）の人工知能の特徴として最も適切な説明はどれか？",
+    choices: [
+      "すべての問題に対応できる汎用AIが完成した",
+      "大規模言語モデル（LLM）や画像・音楽なども扱うマルチモーダルAIが登場している",
+      "エキスパートシステムが世界中で標準的に使われている",
+      "コンピュータの処理速度が人間の脳を超えたため、AIブームは終焉した"
+    ],
+    answer: 1,
+    explanation: "現在のAIは自然な文章を生成できる大規模言語モデル（LLM）や、画像・音楽・文章などを統合的に扱うマルチモーダルAIが中心です。汎用AIはまだ実現しておらず、研究段階にあります。"
+  },
+  {
+    q: "ロボットと人工知能の関係について最も適切な説明はどれか？",
+    choices: [
+      "ロボットと人工知能はまったく同じものを指す",
+      "すべてのロボットは必ず人工知能を搭載している",
+      "人工知能はロボットの脳に相当する部分であり、ロボット＝AIではない",
+      "人工知能は物理的な身体を持つシステムのみを指す"
+    ],
+    answer: 2,
+    explanation: "人工知能はロボットの「脳」に相当する情報処理システムです。ロボットは身体（ハードウェア）を持つ機械であり、AIを搭載しているかどうかは別問題です。AIは「考える・知的処理・目に見えない」というイメージで、ロボットとは区別されます。"
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = [];
+let userAnswers = [];
+
+function render() {
+  const q = questions[current];
+  document.getElementById('q-num').textContent = `問題 ${current + 1}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const labels = ['A', 'B', 'C', 'D'];
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = '';
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="label">${labels[i]}</span><span>${c}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  document.getElementById('btn-next').className = 'btn-next';
+  updateProgress();
+}
+
+function selectAnswer(idx) {
+  const q = questions[current];
+  const buttons = document.querySelectorAll('.choice-btn');
+  buttons.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.answer;
+  if (isCorrect) score++;
+  userAnswers[current] = { selected: idx, correct: isCorrect };
+
+  buttons[q.answer].classList.add('correct');
+  if (!isCorrect) buttons[idx].classList.add('wrong');
+
+  const fb = document.getElementById('feedback');
+  fb.innerHTML = `<strong>${isCorrect ? '✓ 正解！' : '✗ 不正解'}</strong>${q.explanation}`;
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = current < questions.length - 1 ? '次の問題へ →' : '結果を見る';
+  nextBtn.className = 'btn-next show';
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const pct = (current / total) * 100;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = `問題 ${current + 1} / ${total}`;
+  document.getElementById('prog-score').textContent = `正解: ${score}`;
+}
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  current++;
+  if (current < questions.length) {
+    render();
+  } else {
+    showScore();
+  }
+});
+
+function showScore() {
+  document.getElementById('quiz-card').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  const screen = document.getElementById('score-screen');
+  screen.className = 'show';
+
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('score-circle').style.setProperty('--pct', pct + '%');
+  document.getElementById('score-num').textContent = `${score}/${total}`;
+
+  let rank, rankClass, title, sub;
+  if (pct >= 93) {
+    rank = 'S ランク'; rankClass = 'rank-s';
+    title = '完璧です！'; sub = '全問正解レベル。G検定合格は確実です。';
+  } else if (pct >= 80) {
+    rank = 'A ランク'; rankClass = 'rank-a';
+    title = '優秀です！'; sub = '合格ラインを大きく超えています。あと少しで完璧！';
+  } else if (pct >= 60) {
+    rank = 'B ランク'; rankClass = 'rank-b';
+    title = 'もう少し！'; sub = '合格ラインまであと一歩。間違えた問題を復習しましょう。';
+  } else {
+    rank = 'C ランク'; rankClass = 'rank-c';
+    title = '要復習'; sub = 'ガイドに戻って重要キーワードを確認しましょう。';
+  }
+
+  document.getElementById('score-title').textContent = title;
+  document.getElementById('score-sub').textContent = sub;
+  const rankEl = document.getElementById('score-rank');
+  rankEl.textContent = rank;
+  rankEl.className = `rank ${rankClass}`;
+
+  const detail = document.getElementById('results-detail');
+  detail.innerHTML = '';
+  questions.forEach((q, i) => {
+    const ua = userAnswers[i] || { correct: false };
+    const item = document.createElement('div');
+    item.className = 'result-item';
+    item.innerHTML = `
+      <div class="result-icon ${ua.correct ? 'icon-o' : 'icon-x'}">${ua.correct ? '○' : '✗'}</div>
+      <span>Q${i + 1}. ${q.q.length > 40 ? q.q.slice(0, 40) + '…' : q.q}</span>
+    `;
+    detail.appendChild(item);
+  });
+}
+
+function restart() {
+  current = 0; score = 0; userAnswers = [];
+  document.getElementById('quiz-card').style.display = '';
+  document.getElementById('progress-wrap').style.display = '';
+  document.getElementById('score-screen').className = '';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
