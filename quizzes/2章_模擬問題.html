@@ -305,6 +305,21 @@
 
     .btn-retry:hover { background: var(--primary-dark); }
 
+    .btn-review {
+      margin-top: 12px;
+      padding: 14px 40px;
+      background: #fff;
+      color: var(--danger);
+      border: 2px solid var(--danger);
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      width: 100%;
+    }
+    .btn-review:hover { background: var(--danger); color: #fff; }
+
     .results-list {
       margin-top: 28px;
       text-align: left;
@@ -379,6 +394,7 @@
     <br>
     <p style="color:var(--muted);font-size:0.85rem;">G検定の目安: 正答率70%以上で合格ライン</p>
     <button class="btn-retry" onclick="restart()">もう一度挑戦する</button>
+    <button class="btn-review" id="btn-review" onclick="reviewIncorrect()">間違えた問題を復習する</button>
     <div class="results-list">
       <h3>問題別 結果一覧</h3>
       <div id="results-detail"></div>
@@ -559,9 +575,10 @@ let current = 0;
 let score = 0;
 let answered = [];
 let userAnswers = [];
+let activeQuestions = questions;
 
 function render() {
-  const q = questions[current];
+  const q = activeQuestions[current];
   document.getElementById('q-num').textContent = `問題 ${current + 1}`;
   document.getElementById('q-text').textContent = q.q;
 
@@ -585,7 +602,7 @@ function render() {
 }
 
 function selectAnswer(idx) {
-  const q = questions[current];
+  const q = activeQuestions[current];
   const buttons = document.querySelectorAll('.choice-btn');
   buttons.forEach(b => b.disabled = true);
 
@@ -601,14 +618,14 @@ function selectAnswer(idx) {
   fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
 
   const nextBtn = document.getElementById('btn-next');
-  nextBtn.textContent = current < questions.length - 1 ? '次の問題へ →' : '結果を見る';
+  nextBtn.textContent = current < activeQuestions.length - 1 ? '次の問題へ →' : '結果を見る';
   nextBtn.className = 'btn-next show';
 
   updateProgress();
 }
 
 function updateProgress() {
-  const total = questions.length;
+  const total = activeQuestions.length;
   const pct = (current / total) * 100;
   document.getElementById('prog-bar').style.width = pct + '%';
   document.getElementById('prog-text').textContent = `問題 ${current + 1} / ${total}`;
@@ -617,7 +634,7 @@ function updateProgress() {
 
 document.getElementById('btn-next').addEventListener('click', () => {
   current++;
-  if (current < questions.length) {
+  if (current < activeQuestions.length) {
     render();
   } else {
     showScore();
@@ -630,7 +647,7 @@ function showScore() {
   const screen = document.getElementById('score-screen');
   screen.className = 'show';
 
-  const total = questions.length;
+  const total = activeQuestions.length;
   const pct = Math.round((score / total) * 100);
 
   document.getElementById('score-circle').style.setProperty('--pct', pct + '%');
@@ -659,7 +676,7 @@ function showScore() {
 
   const detail = document.getElementById('results-detail');
   detail.innerHTML = '';
-  questions.forEach((q, i) => {
+  activeQuestions.forEach((q, i) => {
     const ua = userAnswers[i] || { correct: false };
     const item = document.createElement('div');
     item.className = 'result-item';
@@ -669,9 +686,24 @@ function showScore() {
     `;
     detail.appendChild(item);
   });
+
+  const hasIncorrect = userAnswers.some(ua => ua && !ua.correct);
+  document.getElementById('btn-review').style.display = hasIncorrect ? '' : 'none';
 }
 
 function restart() {
+  activeQuestions = questions;
+  current = 0; score = 0; userAnswers = [];
+  document.getElementById('quiz-card').style.display = '';
+  document.getElementById('progress-wrap').style.display = '';
+  document.getElementById('score-screen').className = '';
+  render();
+}
+
+function reviewIncorrect() {
+  const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
+  if (incorrect.length === 0) return;
+  activeQuestions = incorrect;
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
