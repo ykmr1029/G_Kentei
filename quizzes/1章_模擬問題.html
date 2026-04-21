@@ -358,6 +358,49 @@
 
     .icon-o { background: var(--success); }
     .icon-x { background: var(--danger); }
+
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #d4cdc8;
+      border-radius: 24px;
+      transition: background 0.2s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .toggle input:checked + .toggle-slider { background: var(--primary); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
   </style>
 </head>
 <body>
@@ -365,6 +408,13 @@
 <header>
   <h1>G検定 第1章 模擬問題</h1>
   <p>人工知能の基礎・歴史・分野の問題 — 4択 20問</p>
+  <div class="toggle-wrap">
+    <label class="toggle">
+      <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
+      <span class="toggle-slider"></span>
+    </label>
+    <span>問題・選択肢をランダムに出題</span>
+  </div>
 </header>
 
 <div class="progress-wrap" id="progress-wrap">
@@ -582,11 +632,32 @@ const questions = [
   }
 ];
 
+let isRandom = true;
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(qs) {
+  const list = isRandom ? shuffleArray(qs) : qs;
+  return list.map(q => {
+    if (!isRandom) return { ...q, choices: [...q.choices] };
+    const indexed = q.choices.map((c, i) => ({ text: c, isCorrect: i === q.answer }));
+    const shuffled = shuffleArray(indexed);
+    return { ...q, choices: shuffled.map(c => c.text), answer: shuffled.findIndex(c => c.isCorrect) };
+  });
+}
+
 let current = 0;
 let score = 0;
 let answered = [];
 let userAnswers = [];
-let activeQuestions = questions;
+let activeQuestions = prepareQuestions(questions);
 
 function render() {
   const q = activeQuestions[current];
@@ -703,7 +774,7 @@ function showScore() {
 }
 
 function restart() {
-  activeQuestions = questions;
+  activeQuestions = prepareQuestions(questions);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
@@ -714,7 +785,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
