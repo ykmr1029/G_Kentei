@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論）— 4択 26問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 26</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/26</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,72 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "A*アルゴリズムで使用される評価関数 f(n) の構成として正しいものはどれか。",
+    choices: [
+      "f(n) = g(n) × h(n)（スタート地点からのコストとゴールまでの推定コストの積）",
+      "f(n) = g(n) + h(n)（スタートからノードnのコスト＋ノードnからゴールへの推定コスト）",
+      "f(n) = h(n) - g(n)（ゴールまでの推定コストからスタートからのコストを引いたもの）",
+      "f(n) = g(n)（スタート地点から現在ノードまでの実際のコストのみ）"
+    ],
+    answer: 1,
+    explanation: "A*アルゴリズムの評価関数はf(n)=g(n)+h(n)。g(n)はスタートからノードnまでの実際のコスト、h(n)はノードnからゴールまでの推定コスト（ヒューリスティック関数）。この和が小さいノードを優先的に探索することで、BFSよりも効率的に最短経路を発見できる。"
+  },
+  {
+    q: "A*アルゴリズムの特徴として最も適切なものはどれか。",
+    choices: [
+      "幅優先探索（BFS）と同じ最短経路を保証するが、ヒューリスティック知識を使い探索を効率化する",
+      "深さ優先探索（DFS）と全く同じ探索順序でメモリ消費が少ない",
+      "最短経路を保証しないが非常に高速に解を見つけられる",
+      "ランダムサンプリングで最善手を推定する手法"
+    ],
+    answer: 0,
+    explanation: "A*アルゴリズムはヒューリスティック関数h(n)が許容的（ゴールまでのコストを過大評価しない）であれば最短経路を保証する。BFSと同等の最短経路結果を、ヒューリスティック知識を使って効率よく（より少ない探索ノード数で）達成できるのが最大の特徴。"
+  },
+  {
+    q: "モンテカルロ木探索（MCTS）の4ステップを正しい順番で並べたものはどれか。",
+    choices: [
+      "選択 → シミュレーション → 展開 → バックプロパゲーション",
+      "展開 → 選択 → バックプロパゲーション → シミュレーション",
+      "選択 → 展開 → シミュレーション → バックプロパゲーション",
+      "シミュレーション → 選択 → 展開 → バックプロパゲーション"
+    ],
+    answer: 2,
+    explanation: "MCTSは「①選択（有望なノードを選ぶ）→②展開（新しいノードを追加）→③シミュレーション/プレイアウト（ランダムにゲームを終局まで実行）→④バックプロパゲーション（結果を上位ノードに反映）」の4ステップを繰り返す。AlphaGoの初期版でディープラーニングと組み合わせて使用された。"
+  },
+  {
+    q: "モンテカルロ木探索（MCTS）の最大の特徴として最も適切なものはどれか。",
+    choices: [
+      "Mini-Max法と同じく精密な評価関数が必須で、評価関数の質に完全に依存する",
+      "ランダムシミュレーション（プレイアウト）を繰り返すことで、詳細な評価関数なしに有望な手を絞り込める",
+      "幅優先探索を改良したもので最短経路を100%保証する",
+      "αβ法の枝刈りを確率的に行う手法で、Mini-Max法と同一の結果を返す"
+    ],
+    answer: 1,
+    explanation: "MCTSの最大の特徴は、ランダムシミュレーション（プレイアウト）を多数回繰り返すことで、詳細な評価関数がなくても有望な手を統計的に絞り込める点。これにより囲碁のように評価関数の設計が難しいゲームでも有効で、AlphaGoでディープラーニングと組み合わせてイ・セドルに勝利した。"
+  },
+  {
+    q: "エキスパートシステムで使われる「前向き推論（Forward Chaining）」の説明として正しいものはどれか。",
+    choices: [
+      "目標（仮説）から逆向きに必要な事実を確認していく推論方式",
+      "既知の事実にルールを順次適用して新たな事実・結論を導いていく推論方式",
+      "ランダムに仮説を生成し検証を繰り返す推論方式",
+      "過去の事例データとの照合で最も似た結論を選ぶ推論方式"
+    ],
+    answer: 1,
+    explanation: "前向き推論（Forward Chaining）は「既知の事実→ルールを適用→新たな事実・結論」という方向で推論する。例えば「発熱がある」「咳がある」という事実からルールを適用して「インフルエンザの疑い」という結論を導く。一方、後ろ向き推論は「インフルエンザかどうか確認したい（目標）→発熱・咳があるかを確認（事実の検証）」という逆方向の推論。"
+  },
+  {
+    q: "知識ベースシステムにおける「前向き推論」と「後ろ向き推論」の比較として正しいものはどれか。",
+    choices: [
+      "前向き推論は目標から逆算し、後ろ向き推論は事実から結論を導く",
+      "前向き推論は事実→結論の方向、後ろ向き推論は結論（目標）→必要な事実を確認する方向",
+      "前向き推論はエキスパートシステムに使えず、後ろ向き推論のみが使用される",
+      "前向き推論はMini-Max法、後ろ向き推論はαβ法に対応する"
+    ],
+    answer: 1,
+    explanation: "前向き推論（Forward Chaining）は既知の事実からルールを適用して結論へ向かう（事実→結論）。後ろ向き推論（Backward Chaining）は目標・仮説から逆向きに必要な事実を確認していく（結論→事実）。両者はエキスパートシステムの推論エンジンで目的に応じて使い分けられる。"
   }
 ];
 
@@ -829,7 +895,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
