@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 25問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 25</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/25</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,61 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "モンテカルロ法の説明として最も適切なものはどれか？",
+    choices: [
+      "盤面の評価関数を精密に計算することで最善手を確実に求める手法",
+      "複数回のランダムシミュレーション（プレイアウト）を繰り返し、統計的な勝率をもとに最善手を評価する手法",
+      "Mini-Max法をさらに改良して不要な枝を刈り取る手法",
+      "ニューラルネットワークを用いて人間棋士の直感を模倣する手法"
+    ],
+    answer: 1,
+    explanation: "モンテカルロ法とは、仮想プレイヤーが完全にランダムに指して終局まで進める「プレイアウト」を複数回繰り返し、どの手が統計的に最も勝率が高いかを評価して最善手を決める手法です。囲碁のように従来の評価関数によるコスト評価が困難なゲームで有効でした。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト」とは何を指すか？",
+    choices: [
+      "盤面の各状態に評価スコアを付与する操作",
+      "Mini-Max法で数手先から逆算して最善手を求める操作",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "探索木のノードを枝刈りして計算量を削減する操作"
+    ],
+    answer: 2,
+    explanation: "プレイアウトとは、モンテカルロ法において仮想プレイヤーがランダムに指し続けて終局まで進めるシミュレーションです。このプレイアウトを多数回繰り返すことで、どの手が統計的に勝率が高いかを評価します。"
+  },
+  {
+    q: "AlphaGoがモンテカルロ法などのブルートフォース戦略と異なる最大の特徴はどれか？",
+    choices: [
+      "より多くのプレイアウトを短時間で実行できる計算資源を持つ点",
+      "評価関数を精密に定義して全候補を評価する点",
+      "ディープラーニングを使って人間の思考方法をコンピュータで実現した点",
+      "深さ優先探索とモンテカルロ法を組み合わせたハイブリッドアプローチを採用した点"
+    ],
+    answer: 2,
+    explanation: "AlphaGoはモンテカルロ法のようなランダムシミュレーションによるブルートフォース戦略ではなく、ディープラーニングの技術を使って人間棋士の思考方法をコンピュータで実現しました。機械学習を活用し、ビッグデータから盤面評価方法を学習した点が革新的です。"
+  },
+  {
+    q: "深さ優先探索における「バックトラック（Backtrack）」とは何か？",
+    choices: [
+      "探索済みノードを再訪問して評価スコアを更新する操作",
+      "行き止まりに当たったとき、1つ前のノードに戻って別の経路を探索する操作",
+      "最深部に到達したとき、そこから逆算して最善経路を決定する操作",
+      "幅優先探索と深さ優先探索を切り替えながら探索する操作"
+    ],
+    answer: 1,
+    explanation: "バックトラックとは深さ優先探索（DFS）において、行き止まりに当たった際に1つ前のノードに戻り、別の経路を探索する操作です。DFSはこのバックトラックを繰り返すことで探索を進め、メモリ消費が少ない反面、最短経路は保証されません。"
+  },
+  {
+    q: "αβ法において「αカット」と「βカット」が共通して行う操作として正しいものはどれか？",
+    choices: [
+      "評価関数を無効化して探索を高速化する操作",
+      "明らかに選ばれない枝（ノード）を刈り取ることでMini-Max法の探索量を削減する操作",
+      "Mini-Max法とは独立して動作する全く異なる探索アルゴリズム",
+      "ランダムサンプリングで不要なノードを除外する操作"
+    ],
+    answer: 1,
+    explanation: "αβ法（Alpha-Beta Pruning）はMini-Max法を改良した手法で、「αカット」と「βカット」の操作によって明らかに選ばれない枝（ノード）を枝刈り（pruning）し、探索量を大幅に削減します。Mini-Max法と同等の最善手をより少ない計算量で求めることができます。"
   }
 ];
 
@@ -829,7 +884,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';

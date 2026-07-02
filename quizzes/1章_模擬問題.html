@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第1章 模擬問題</h1>
-  <p>人工知能の基礎・歴史・分野の問題 — 4択 20問</p>
+  <p>人工知能の基礎・歴史・分野の問題 — 4択 28問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 28</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/15</div>
+      <div class="score-number" id="score-num">0/28</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,29 @@ const questions = [
     ],
     answer: 2,
     explanation: "2010年以降、Googleはディープラーニングをベースにしたニューラル機械翻訳を採用し、機械翻訳の品質が大幅に向上しました。さらに2018年以降はLLM（大規模言語モデル）の台頭により、文脈理解・多様な言語への適応が可能になりました。"
+  },
+  {
+    q: "ジョン・サールが「強いAI」への反論として提唱した思考実験はどれか？",
+    choices: ["チューリングテスト", "フレーム問題", "中国語の部屋", "シンボルグラウンディング問題"],
+    answer: 2,
+    explanation: "「中国語の部屋（Chinese Room）」はジョン・サールが強いAIへの反論として提唱した思考実験です。閉じた部屋で英語話者が中国語マニュアルを使って中国語の質問に答えても、英語話者が中国語を「理解」したことにはならない、という例えで、仕組みをシミュレートすることと本質的な理解は別であることを示しました。"
+  },
+  {
+    q: "「中国語の部屋（Chinese Room）」の思考実験が示す核心的な主張はどれか？",
+    choices: [
+      "AIは将来的に人間と同等の知能を持てる",
+      "チューリングテストに合格したAIは強いAIの条件を満たす",
+      "プログラムが人間の認知を模倣できても、それは本質的な理解を意味しない",
+      "人間でさえ外国語を理解するのは困難である"
+    ],
+    answer: 2,
+    explanation: "中国語の部屋が示す核心は「仕組みをシミュレートすること（記号を操作すること）」と「本質的な理解（意味を把握すること）」は別物だということです。これはサール自身による「強いAI（コンピュータは心を持つ）」への反論として提唱されました。"
+  },
+  {
+    q: "チューリングテストを実際に実施する「ローブナーコンテスト（Loebner Prize）」が初めて開催されたのはいつか？",
+    choices: ["1966年", "1980年", "1991年", "2000年"],
+    answer: 2,
+    explanation: "ローブナーコンテストは1991年以降、毎年開催されているチューリングテストを行うコンテストです。G検定では「1991年〜」という年号が頻出です。1966年はELIZA開発年、1980年はジョン・サールが強いAI・弱いAIを発表した年です。"
   }
 ];
 
