@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 25問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 25</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/25</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,61 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "モンテカルロ法（Monte Carlo Method）の手順として最も正しいものはどれか？",
+    choices: [
+      "数手先の全経路をツリー構造で列挙し、評価関数でコスト評価して最善手を選ぶ",
+      "仮想プレイヤーが完全にランダムに指して終局まで進める（プレイアウト）を複数回繰り返し、統計的な勝率で最善手を評価する",
+      "ディープラーニングで盤面の特徴量を自動学習し、評価関数なしで最善手を発見する",
+      "αカット・βカットで不要な枝を刈り取り、効率的に最善手を探索する"
+    ],
+    answer: 1,
+    explanation: "モンテカルロ法では①ある局面からコスト評価を放棄し、②仮想プレイヤーが完全にランダムに指して終局させる（プレイアウト）を繰り返し、③どの手の勝率が最も高いかを統計的に計算します。囲碁クラスの複雑なボードゲームで、従来の評価関数によるコスト評価が困難な場面に適用されました。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト（playout）」の正しい定義はどれか？",
+    choices: [
+      "盤面の有利・不利を数値で評価する評価関数を適用する操作",
+      "αβ法で不要な枝を刈り取る枝刈り操作",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "ニューラルネットワークで盤面の特徴を抽出する操作"
+    ],
+    answer: 2,
+    explanation: "プレイアウトとはモンテカルロ法において、仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーションのことです。このプレイアウトを複数回実行し、どの手が最も勝率が高いかを統計的に計算して最善手を求めます。"
+  },
+  {
+    q: "DeepMind社のAlphaGoが2016年にプロ棋士イ・セドルを破った際の手法として正しいものはどれか？",
+    choices: [
+      "モンテカルロ法によるブルートフォース（力任せ）の大量プレイアウトで勝利した",
+      "αβ法による効率的な枝刈りで計算量を削減して勝利した",
+      "モンテカルロ法ではなくディープラーニングを用いて人間の思考方法をコンピュータで実現して勝利した",
+      "Mini-Max法に従来より深い探索深度を組み合わせて勝利した"
+    ],
+    answer: 2,
+    explanation: "AlphaGoはモンテカルロ法のようなブルートフォース（力任せ）の戦略ではなく、ディープラーニングを活用して人間の思考方法をコンピュータで実現しました。機械学習によってより優れた特徴量を発見し、ビッグデータから「2つのコマの関係→3つのコマの関係で盤面を評価する」方法を学習したことが革新でした。"
+  },
+  {
+    q: "囲碁などのボードゲームにおいて探索が困難な主な理由はどれか？",
+    choices: [
+      "ゲームのルールが頻繁に変わりアルゴリズムを更新できないから",
+      "ランダム要素があるためどの手が最善かを事前に計算できないから",
+      "探索木が深くなるにつれて計算量が指数関数的に増大するから",
+      "ゲームの状態空間が小さすぎて探索木を構築できないから"
+    ],
+    answer: 2,
+    explanation: "ボードゲームは探索木問題に変換できますが、探索が深くなるにつれて計算量が指数関数的に増大します。囲碁は約10の360乗通りの組み合わせがあり、全ノードを探索することは事実上不可能です。そのためヒューリスティックな知識やMini-Max法、αβ法、モンテカルロ法などの工夫が必要です。"
+  },
+  {
+    q: "αβ法の「αカット」と「βカット」について最も正しい説明はどれか？",
+    choices: [
+      "αカットは幅優先探索を止め、βカットは深さ優先探索を止める操作",
+      "αカットとβカットはいずれも、探索する必要がないと判断された枝（ノード）を刈り取る操作",
+      "αカットはスコアを最大化する操作で、βカットはスコアを最小化する別のアルゴリズム",
+      "αカット・βカットにより、Mini-Max法とは異なる最善手が求まる"
+    ],
+    answer: 1,
+    explanation: "αβ法のαカット・βカットはどちらも「明らかに選ばれない（探索する必要がない）枝を刈り取る」操作です。これによりMini-Max法と同等の最善手を求めながらも、大幅に探索量を削減できます。ただし枝刈りの精度は評価関数の質に依存します。"
   }
 ];
 
@@ -829,7 +884,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
