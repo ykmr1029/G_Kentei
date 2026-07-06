@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第1章 模擬問題</h1>
-  <p>人工知能の基礎・歴史・分野の問題 — 4択 20問</p>
+  <p>人工知能の基礎・歴史・分野の問題 — 4択 27問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 27</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/15</div>
+      <div class="score-number" id="score-num">0/27</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,28 @@ const questions = [
     ],
     answer: 2,
     explanation: "2010年以降、Googleはディープラーニングをベースにしたニューラル機械翻訳を採用し、機械翻訳の品質が大幅に向上しました。さらに2018年以降はLLM（大規模言語モデル）の台頭により、文脈理解・多様な言語への適応が可能になりました。"
+  },
+  {
+    q: "ジョン・サールが「強いAI」への反論として提唱した思考実験「中国語の部屋」の内容として正しいものはどれか？",
+    choices: [
+      "中国語を話すAIが部屋の中で物理世界と言語をどう結びつけるかを示した実験",
+      "英語しか話せない人が閉じた部屋で中国語マニュアルを参照しながら中国語の質問に正確に答えるが、外から見ると中国語を理解しているように見える思考実験",
+      "コンピュータが部屋の外の人間と中国語でリアルタイム会話できるかを試すチューリングテストの変形版",
+      "中国語のデータを大量に学習したAIが人間と区別できないほど自然な会話ができることを示した実験"
+    ],
+    answer: 1,
+    explanation: "「中国語の部屋」はジョン・サールが強いAIへの反論として提唱した思考実験です。英語しか話せない人が閉じた部屋で中国語マニュアルを使って中国語の質問に正確な回答を返しても、その人は中国語を「理解」していません。これは「仕組みをシミュレートしても本質的な理解にはならない」ことを示し、強いAIへの哲学的反論となっています。"
+  },
+  {
+    q: "チューリングテストを実際に行うコンテスト「ローブナーコンテスト（Loebner Prize）」が開始された年として正しいものはどれか？",
+    choices: [
+      "1966年",
+      "1980年",
+      "1991年",
+      "2012年"
+    ],
+    answer: 2,
+    explanation: "ローブナーコンテストは1991年以降、チューリングテストを実際に行うコンテストとして開催されています。1966年はELIZAが開発された年、1980年はジョン・サールが強いAI・弱いAIの論文を発表した年です。G検定では「1991年〜」という年号とローブナーコンテストの名称の組み合わせが頻出です。"
   }
 ];
 
