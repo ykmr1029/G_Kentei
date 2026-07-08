@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第1章 模擬問題</h1>
-  <p>人工知能の基礎・歴史・分野の問題 — 4択 20問</p>
+  <p>人工知能の基礎・歴史・分野の問題 — 4択 27問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 27</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/15</div>
+      <div class="score-number" id="score-num">0/27</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -618,6 +618,28 @@ const questions = [
     choices: ["アラン・チューリング", "ジョン・マッカーシー", "ジョン・サール", "スティーブン・ハルナッド"],
     answer: 2,
     explanation: "強いAI・弱いAIという区分は哲学者ジョン・サールが1980年に発表した論文で示されました。強いAIは「コンピュータは心を持つ」、弱いAIは「有用な道具であればよい」という立場です。サール自身は「中国語の部屋」という思考実験で強いAIに反論しています。"
+  },
+  {
+    q: "「中国語の部屋（Chinese Room）」の思考実験の内容として最も適切なものはどれか？",
+    choices: [
+      "英語話者が中国語マニュアルを使って中国語の質問に答えられるが、英語話者は中国語を「理解」しているわけではないことを示す思考実験",
+      "コンピュータが自然言語を完全に習得するためには、ネイティブスピーカーと密接に学習する必要があることを示す",
+      "翻訳システムが閉じた環境でのみ正確に機能することを実験で示したもの",
+      "チューリングテストの発展版として、言語理解の深さを段階的に測る実験"
+    ],
+    answer: 0,
+    explanation: "中国語の部屋はジョン・サールが「強いAI」への反論として提唱した思考実験です。英語話者が部屋の中で中国語マニュアルを参照して中国語の質問に正しく答えられても、英語話者は中国語を「理解」していません。これは「仕組みをシミュレートすること（プログラムを正しく実行すること）と本質的な理解（意味の理解）は別物である」というサールの主張を示しています。"
+  },
+  {
+    q: "「中国語の部屋（Chinese Room）」の思考実験が直接的に反論している概念はどれか？",
+    choices: [
+      "弱いAI（コンピュータは有用な道具であればよいという立場）",
+      "強いAI（適切にプログラムされたコンピュータは人間と同様に心を持つという立場）",
+      "フレーム問題（関連する事柄だけを選ぶことが難しいという問題）",
+      "シンボルグラウンディング問題（記号と指示対象の結びつきの問題）"
+    ],
+    answer: 1,
+    explanation: "中国語の部屋はジョン・サール自身が「強いAI」への反論として提唱した思考実験です。強いAIとは「適切にプログラムされたコンピュータは人間と同様に心を持ち、そのプログラム自体が人間の認知の証明となる」という立場。中国語の部屋は「仕組みをシミュレートできても本質的な理解（＝心）は伴わない」ことを示し、強いAIの主張に反論しています。"
   },
   {
     q: "シンボルグラウンディング問題（Symbol Grounding Problem）を提唱した人物と年の組み合わせとして正しいものはどれか？",
