@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 24問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 24</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/24</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -618,6 +618,50 @@ const questions = [
     ],
     answer: 1,
     explanation: "αβ法はMini-Max法の改良版。不要な枝を刈り取ることで探索量を削減しながら、Mini-Max法と同等の最善手を求めることができる。"
+  },
+  {
+    q: "モンテカルロ法の説明として最も適切なものはどれか？",
+    choices: [
+      "Mini-Max法をより効率的にした枝刈りアルゴリズム",
+      "評価関数を用いてすべての盤面を網羅的に評価する手法",
+      "複数回のランダムシミュレーション（プレイアウト）を繰り返し、統計的な勝率をもとに最善手を評価する手法",
+      "ディープラーニングのみを用いてゲームを学習させる手法"
+    ],
+    answer: 2,
+    explanation: "モンテカルロ法は、ある局面から仮想プレイヤーがランダムに終局まで指すシミュレーション（プレイアウト）を複数回繰り返し、どの手の勝率が最も高いかを統計的に計算して最善手を評価する手法です。囲碁クラスの複雑なボードゲームで、従来の評価関数によるコスト評価が困難な場合に有効でした。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト」とは何か？",
+    choices: [
+      "過去の棋譜データから最善手を機械学習するプロセス",
+      "評価関数を使って各盤面のスコアを算出する計算",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "人間の棋士が教師データとして最善手を提供するプロセス"
+    ],
+    answer: 2,
+    explanation: "プレイアウトとは、モンテカルロ法においてコスト評価を行わずに仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーションのことです。これを複数回繰り返し、どの手が統計的に最も勝率が高いかを計算して最善手を評価します。G検定では「プレイアウト」という用語が問われます。"
+  },
+  {
+    q: "囲碁クラスのボードゲームで従来の評価関数によるコスト評価が困難だった主な理由はどれか？",
+    choices: [
+      "囲碁のルールが複雑すぎてプログラミングできなかったから",
+      "囲碁は約10の360乗通りもの組み合わせがあり、探索するノードが膨大だったから",
+      "囲碁は人間の直感が必要で論理的なアルゴリズムでは扱えないから",
+      "囲碁の評価関数を定義するための計算資源が存在しなかったから"
+    ],
+    answer: 1,
+    explanation: "囲碁は約10の360乗通りの組み合わせがあり、チェスや将棋と比べても桁違いに探索ノードが多いです。そのため盤面のスコア評価（コスト評価）が極めて困難で、従来の評価関数ベースのアプローチでは対処しきれませんでした。モンテカルロ法のランダムシミュレーション（プレイアウト）はこの課題への有力なアプローチの一つとなりました。"
+  },
+  {
+    q: "2016年にプロ棋士イ・セドルに勝利したAlphaGoはどのような技術を中心に使っていたか？",
+    choices: [
+      "ランダムシミュレーション（モンテカルロ法）のブルートフォース戦略のみ",
+      "Mini-Max法とαβ法の組み合わせによる従来型探索",
+      "ディープラーニングで人間の思考方法を実現し、機械学習でビッグデータから優れた特徴量を発見した手法",
+      "量子コンピューティングによる高速な全探索"
+    ],
+    answer: 2,
+    explanation: "AlphaGoはモンテカルロ法のようなブルートフォース（力任せ）の戦略ではなく、ディープラーニングの技術を使って人間の思考方法をコンピュータで実現しました。機械学習を活用し、ビッグデータから「2〜3つのコマの関係で盤面を評価する」という優れた特徴量を発見したことが勝利の鍵です。この点でモンテカルロ法とは本質的に異なるアプローチです。"
   },
   {
     q: "「人工無能」の説明として最も適切なものはどれか？",
@@ -829,7 +873,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
