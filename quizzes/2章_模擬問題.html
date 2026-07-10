@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 24問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 24</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/24</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,50 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "深さ優先探索（DFS）において、行き止まりに到達したときに行う「1つ前のノードに戻る」操作を何と呼ぶか。",
+    choices: [
+      "ブランチカット",
+      "バックトラック",
+      "ロールバック",
+      "プルーニング"
+    ],
+    answer: 1,
+    explanation: "深さ優先探索では、行き止まりに到達すると1つ前のノードに戻って別の経路を探索します。この操作を「バックトラック（backtrack）」と呼びます。バックトラックを繰り返すことでメモリを節約しながら探索できるのがDFSの特徴です。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト（Playout）」の説明として正しいものはどれか。",
+    choices: [
+      "ゲームの評価関数を使って最も有望な手を選ぶ操作",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "過去の対局データをもとに最善手を学習するプロセス",
+      "ボードゲームのルールをコンピュータに定義する作業"
+    ],
+    answer: 1,
+    explanation: "プレイアウトとは、モンテカルロ法においてゲームがある局面まで進んだ後、仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーションです。これを複数回繰り返し、どの手の勝率が高いかを統計的に計算してスコアを評価します。"
+  },
+  {
+    q: "αβ法における「αカット」と「βカット」の説明として正しいものはどれか。",
+    choices: [
+      "αカットはMinノード（相手のターン）、βカットはMaxノード（自分のターン）で探索不要な枝を切り落とす操作",
+      "αカットはMaxノード（自分のターン）、βカットはMinノード（相手のターン）で探索不要な枝を切り落とす操作",
+      "αカットは序盤の枝刈り、βカットは終盤の枝刈りを指す操作",
+      "αカットとβカットはどちらも自分のターンで行う枝刈り操作で役割に違いはない"
+    ],
+    answer: 1,
+    explanation: "αβ法では、αカットはMaxノード（自分のターン）で探索する必要のない相手の枝を切り落とす操作、βカットはMinノード（相手のターン）で探索する必要のない自分の枝を切り落とす操作です。この二種類の枝刈りを組み合わせることで、Mini-Max法より効率的に最善手を求められます。"
+  },
+  {
+    q: "AlphaGoとモンテカルロ法の違いとして最も適切な説明はどれか。",
+    choices: [
+      "AlphaGoはモンテカルロ法を使わず、すべての局面を完全探索して最善手を求める",
+      "AlphaGoはモンテカルロ法のようなブルートフォース（力任せ）戦略ではなく、ディープラーニングで人間の思考方法を実現し、機械学習でより優れた特徴量を発見した",
+      "AlphaGoはモンテカルロ法を発展させた手法で、プレイアウト回数を増やすことで強くなった",
+      "AlphaGoはモンテカルロ法に統計的手法を加えただけで、ディープラーニングは使用していない"
+    ],
+    answer: 1,
+    explanation: "AlphaGoはモンテカルロ法のようなブルートフォース（力任せ）の戦略ではなく、ディープラーニングの技術を用いて人間の思考方法をコンピュータで実現しました。機械学習を活用してビッグデータから「2つのコマの関係→3つのコマの関係で盤面を評価する」方法などのより優れた特徴量を発見した点が核心です。"
   }
 ];
 
@@ -829,7 +873,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
