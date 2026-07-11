@@ -407,7 +407,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 25問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +419,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 25</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +436,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/25</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +673,61 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト（Playout）」とは何を指すか？",
+    choices: [
+      "ゲームの評価関数を精度よく計算するステップ",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "囲碁のルールをコンピュータに学習させるステップ",
+      "複数の候補手を並列処理で評価する手法"
+    ],
+    answer: 1,
+    explanation: "プレイアウトとは、モンテカルロ法においてある局面から仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーションのことです。これを複数回繰り返し、各手の勝率を統計的に評価することで最善手を求めます。"
+  },
+  {
+    q: "AlphaGoはモンテカルロ法と何が根本的に異なるか？最も適切な説明はどれか？",
+    choices: [
+      "AlphaGoはモンテカルロ法より多くのプレイアウトを実行して勝利した",
+      "AlphaGoはモンテカルロ法（力任せ）ではなく、ディープラーニングで人間の思考方法をコンピュータで実現した",
+      "AlphaGoはルールベース探索とモンテカルロ法を組み合わせて勝利した",
+      "AlphaGoはモンテカルロ法を改良してランダム性を排除した手法を使った"
+    ],
+    answer: 1,
+    explanation: "AlphaGoはモンテカルロ法のようなブルートフォース（力任せ）の戦略ではなく、ディープラーニングを使って人間の思考方法をコンピュータで実現しました。機械学習で優れた「特徴量」を発見し、ビッグデータからより高度な盤面評価方法を学習しました。"
+  },
+  {
+    q: "深さ優先探索（DFS）で、行き止まりに当たったときに1つ前のノードに戻る操作を何と呼ぶか？",
+    choices: [
+      "プルーニング（枝刈り）",
+      "バックトラック",
+      "ロールバック",
+      "リカーシブコール"
+    ],
+    answer: 1,
+    explanation: "深さ優先探索（DFS）において、行き止まりに当たったとき1つ前のノードに戻って別の経路を探索する操作を「バックトラック」と呼びます。この操作があるため、DFSは全経路をメモリに保持する必要がなくメモリ消費が少ないというメリットがあります。"
+  },
+  {
+    q: "αβ法における「αカット」と「βカット」の説明として正しいものはどれか？",
+    choices: [
+      "αカットはMinノード（相手のターン）、βカットはMaxノード（自分のターン）での枝刈り操作",
+      "αカットはMaxノード（自分のターン）で探索不要な相手の枝を、βカットはMinノード（相手のターン）で探索不要な自分の枝を切り落とす操作",
+      "αカットもβカットも同じ操作で、探索の深さに応じて使い分ける",
+      "αカットは水平方向の枝刈り、βカットは垂直方向の枝刈りのこと"
+    ],
+    answer: 1,
+    explanation: "αβ法では、αカットはMaxノード（自分のターン）で探索する必要のない相手の枝を切り落とす操作、βカットはMinノード（相手のターン）で探索する必要のない自分の枝を切り落とす操作です。この枝刈りによりMini-Max法より効率的な探索が実現します。"
+  },
+  {
+    q: "ボードゲームAIにおいて「コスト概念を取り入れる」ことの目的として最も適切なものはどれか？",
+    choices: [
+      "ゲームサーバーの運営コストを削減するため",
+      "探索が深くなるにつれて指数関数的に増大する計算量を、既知の知識・経験で抑えるため",
+      "AIの学習に必要なデータ収集コストを最小化するため",
+      "ゲームのルール違反を検知して除外するため"
+    ],
+    answer: 1,
+    explanation: "ボードゲームでは探索が深くなるほど計算量が指数関数的に増大します。コスト概念（盤面の有利・不利を評価するスコア）と既知の知識・経験（ヒューリスティックな知識）を取り入れることで、探索経路を短くして計算量を抑えることが重要です。"
   }
 ];
 
@@ -829,7 +884,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
