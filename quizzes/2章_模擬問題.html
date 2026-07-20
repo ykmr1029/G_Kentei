@@ -217,7 +217,6 @@
 
     .btn-next:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
-    /* Score screen */
     #score-screen {
       display: none;
       text-align: center;
@@ -407,7 +406,7 @@
 
 <header>
   <h1>G検定 第2章 模擬問題</h1>
-  <p>人工知能をめぐる動向（探索・推論）— 4択 10問</p>
+  <p>人工知能をめぐる動向（探索・推論・知識表現）— 4択 25問</p>
   <div class="toggle-wrap">
     <label class="toggle">
       <input type="checkbox" id="toggle-random" checked onchange="isRandom = this.checked">
@@ -419,7 +418,7 @@
 
 <div class="progress-wrap" id="progress-wrap">
   <div class="progress-label">
-    <span id="prog-text">問題 1 / 15</span>
+    <span id="prog-text">問題 1 / 25</span>
     <span id="prog-score">正解: 0</span>
   </div>
   <div class="progress-bar"><div class="progress-bar-inner" id="prog-bar"></div></div>
@@ -436,7 +435,7 @@
 <div id="score-screen">
   <div class="score-card">
     <div class="score-circle" id="score-circle">
-      <div class="score-number" id="score-num">0/10</div>
+      <div class="score-number" id="score-num">0/25</div>
     </div>
     <h2 id="score-title"></h2>
     <p id="score-sub"></p>
@@ -673,6 +672,56 @@ const questions = [
     ],
     answer: 2,
     explanation: "MYCINの処方正答率は69%で、一般医師の水準を上回りましたが、専門医の80%には届きませんでした。これはエキスパートシステムの可能性（一般医師超え）と限界（専門医には届かない）を示す典型的な例として知られています。G検定では正答率の数字（69%と80%）も問われます。"
+  },
+  {
+    q: "深さ優先探索（DFS）において、行き止まりに当たった際に「1つ前のノードに戻る」操作を何と呼ぶか？",
+    choices: ["プルーニング（枝刈り）", "バックトラック", "プレイアウト", "ヒューリスティック"],
+    answer: 1,
+    explanation: "深さ優先探索では、行き止まりに当たると「1つ前のノードに戻って別の経路を探索する」操作を行います。これを「バックトラック（backtrack）」と呼びます。DFSがBFSよりもメモリ消費が少ない理由も、バックトラックで1つ前のノードに戻るだけで良く、全経路を同時にメモリに保持する必要がないためです。"
+  },
+  {
+    q: "αβ法における「αカット」と「βカット」の正しい説明はどれか？",
+    choices: [
+      "αカット = 探索木の奇数層での枝刈り / βカット = 偶数層での枝刈り",
+      "αカット = Maxノード（自分のターン）で探索不要な相手の枝を切り落とす / βカット = Minノード（相手のターン）で探索不要な自分の枝を切り落とす",
+      "αカット = 勝ちが確定した枝を切り落とす / βカット = 負けが確定した枝を切り落とす",
+      "αカット = 深さ方向の枝刈り / βカット = 幅方向の枝刈り"
+    ],
+    answer: 1,
+    explanation: "αβ法の枝刈りには2種類あります。αカットはMaxノード（自分のターン）で探索する必要のない相手の枝を切り落とす操作、βカットはMinノード（相手のターン）で探索する必要のない自分の枝を切り落とす操作です。この枝刈りによりMini-Max法と同等の最善手をより少ない探索量で求められます。"
+  },
+  {
+    q: "モンテカルロ法における「プレイアウト（playout）」の説明として正しいものはどれか？",
+    choices: [
+      "盤面の評価関数を計算して次の一手を選択する操作",
+      "過去の棋譜を大量に読み込んでAIを学習させる操作",
+      "仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーション",
+      "ディープラーニングモデルが最善手を確率的に予測する操作"
+    ],
+    answer: 2,
+    explanation: "プレイアウトとはモンテカルロ法において、仮想プレイヤーが完全にランダムに指して終局まで進めるシミュレーションです。このプレイアウトを複数回実行し、どの手が最も高い勝率をもたらすかを統計的に評価することで最善手を求めます。囲碁のような複雑なゲームの評価関数問題を回避するために有効な手法です。"
+  },
+  {
+    q: "囲碁においてコンピュータが長年人間に勝てなかった主な理由として最も適切なものはどれか？",
+    choices: [
+      "囲碁のルールが複雑でコンピュータのプログラムに正確に記述できなかったため",
+      "コンピュータの処理速度が絶対的に不足していて計算が終わらなかったため",
+      "盤面の有利・不利を数値化する評価関数の設計が極めて難しかったため",
+      "囲碁は運の要素が大きく、コンピュータの論理的思考では対応できなかったため"
+    ],
+    answer: 2,
+    explanation: "チェスやオセロでは早い段階でコンピュータが人間を超えましたが、囲碁では「盤面の有利・不利を数値化する評価関数（スコア）の設計が極めて難しい」という問題がありました。これがコンピュータが長年囲碁で苦戦した主因です。モンテカルロ法はこの評価関数問題を回避するために有効なアプローチでした。AlphaGoはさらにディープラーニングでこの問題を根本的に解決しました。"
+  },
+  {
+    q: "ボードゲームの探索において「計算量が指数関数的に増大する」とはどういうことを指すか？",
+    choices: [
+      "探索の深さが2倍になると計算量も2倍になる（線形増加）",
+      "各ノードで枝分かれするため、深さが増すごとにノード数が掛け算的に爆発する",
+      "計算量は最初だけ大きく、一定の深さ以降は増加が緩やかになる",
+      "計算量は問題の難易度ではなくコンピュータ性能のみに依存する"
+    ],
+    answer: 1,
+    explanation: "探索木において1ノードがk個の子ノードを持つ場合、深さdのノード数はk^d（kのd乗）となります。例えばk=3、d=10なら3の10乗=59,049ノードです。このような「掛け算的な爆発」を指数関数的増大と呼びます。囲碁の組み合わせが約10の360乗通りという膨大な数になる理由もこれです。ヒューリスティックな知識やコスト概念が必要な理由は、この計算量の爆発を抑えるためです。"
   }
 ];
 
@@ -829,7 +878,7 @@ function restart() {
 function reviewIncorrect() {
   const incorrect = activeQuestions.filter((_, i) => userAnswers[i] && !userAnswers[i].correct);
   if (incorrect.length === 0) return;
-  activeQuestions = incorrect;
+  activeQuestions = prepareQuestions(incorrect);
   current = 0; score = 0; userAnswers = [];
   document.getElementById('quiz-card').style.display = '';
   document.getElementById('progress-wrap').style.display = '';
